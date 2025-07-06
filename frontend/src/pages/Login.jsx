@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await authAPI.post("/login", { email, password });
-      login(res.data.token, email);
+      login(res.data.token, res.data.name);
       navigate("/");
     } catch (err) {
       alert("Credenciais inválidas");

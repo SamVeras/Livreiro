@@ -2,10 +2,11 @@ import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Books from "./pages/Books";
 import AddBook from "./pages/AddBook";
 import MyBooks from "./pages/MyBooks";
 import BookDetails from "./pages/BookDetails";
+import Home from "./pages/Home";
+import Welcome from "./pages/Welcome";
 
 function PrivateRoute({ children }) {
   const { token } = useAuth();
@@ -13,12 +14,12 @@ function PrivateRoute({ children }) {
 }
 
 export default function App() {
-  const { email, logout, token } = useAuth();
+  const { name, logout, token } = useAuth();
 
   return (
     <div>
       <nav>
-        <Link to="/">Livros</Link>
+        <Link to="/">Home</Link>
         {!token && (
           <>
             {" "}
@@ -34,13 +35,13 @@ export default function App() {
         {token && (
           <>
             {" "}
-            | Logado como <strong>{email}</strong> <button onClick={logout}>Sair</button>
+            | Logado como <strong>{name}</strong> <button onClick={logout}>Sair</button>
           </>
         )}
       </nav>
 
       <Routes>
-        <Route path="/" element={<Books />} />
+        <Route path="/" element={token ? <Home /> : <Welcome />} />
         <Route
           path="/my-books/:id"
           element={
