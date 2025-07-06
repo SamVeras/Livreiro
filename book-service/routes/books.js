@@ -33,10 +33,12 @@ router.patch("/:id", auth, async (req, res) => {
       return res.status(403).json({ error: "Você não tem permissão para editar este livro." });
     }
 
-    const { rating, progress, review } = req.body;
+    const { rating, progress, review, startedAt, finishedAt } = req.body;
     if (rating !== undefined) book.rating = rating;
     if (progress !== undefined) book.progress = progress;
     if (review !== undefined) book.review = review;
+    if (startedAt !== undefined) book.startedAt = new Date(startedAt);
+    if (finishedAt !== undefined) book.finishedAt = new Date(finishedAt);
 
     await book.save();
     res.json(book);
@@ -47,13 +49,10 @@ router.patch("/:id", auth, async (req, res) => {
 });
 
 router.delete("/:id", auth, async (req, res) => {
-  console.log("Tentando deletar livro:", req.params.id, "do usuário:", req.userId);
-
   const book = await Book.findById(req.params.id);
   if (!book || String(book.ownerId) !== req.userId) {
     return res.status(403).json({ error: "Você não tem permissão para remover este livro." });
   }
-
   await book.deleteOne();
   res.json({ message: "Livro removido com sucesso." });
 });

@@ -21,6 +21,8 @@ export default function BookSearch() {
       author: (info.authors && info.authors[0]) || "Desconhecido",
       genre: (info.categories && info.categories[0]) || "Gênero indefinido",
       description: info.description || "Sem descrição",
+      coverImage: info.imageLinks?.thumbnail || "",
+      publishedDate: info.publishedDate || "",
     };
 
     try {
@@ -49,6 +51,10 @@ export default function BookSearch() {
               <br />
               <em>{(info.categories && info.categories.join(", ")) || "Sem categoria"}</em>
               <p>{info.description?.substring(0, 200) || "Sem descrição"}</p>
+              {info.imageLinks?.thumbnail && (
+                <img src={info.imageLinks.thumbnail} alt="Capa" style={{ width: "120px" }} />
+              )}
+              <br />
               <button onClick={() => addBook(book)}>Adicionar</button>
             </li>
           );

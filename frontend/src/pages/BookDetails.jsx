@@ -9,7 +9,13 @@ export default function BookDetails() {
   const navigate = useNavigate();
   const [book, setBook] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({ rating: "", progress: "", review: "" });
+  const [form, setForm] = useState({
+    rating: "",
+    progress: "",
+    review: "",
+    startedAt: "",
+    finishedAt: "",
+  });
 
   useEffect(() => {
     bookAPI
@@ -19,9 +25,11 @@ export default function BookDetails() {
       .then((res) => {
         setBook(res.data);
         setForm({
-          rating: res.data.rating || "",
-          progress: res.data.progress || "",
+          rating: res.data.rating ?? "",
+          progress: res.data.progress ?? "",
           review: res.data.review || "",
+          startedAt: res.data.startedAt ? res.data.startedAt.slice(0, 10) : "",
+          finishedAt: res.data.finishedAt ? res.data.finishedAt.slice(0, 10) : "",
         });
       })
       .catch(() => {
@@ -37,7 +45,6 @@ export default function BookDetails() {
   const handleSave = async () => {
     const rating = parseFloat(form.rating);
     const progress = parseFloat(form.progress);
-
     if (
       (form.rating && (isNaN(rating) || rating < 0 || rating > 10)) ||
       (form.progress && (isNaN(progress) || progress < 0 || progress > 100))
@@ -62,11 +69,18 @@ export default function BookDetails() {
   return (
     <div>
       <h2>{book.title}</h2>
+      {book.coverImage && <img src={book.coverImage} alt="Capa" style={{ width: "150px" }} />}
       <p>
         <strong>Autor:</strong> {book.author}
       </p>
       <p>
         <strong>Gênero:</strong> {book.genre}
+      </p>
+      <p>
+        <strong>Publicado em:</strong> {book.publishedDate || "—"}
+      </p>
+      <p>
+        <strong>Adicionado em:</strong> {new Date(book.createdAt).toLocaleDateString()}
       </p>
       <p>
         <strong>Descrição:</strong> {book.description}
@@ -81,6 +95,12 @@ export default function BookDetails() {
             <strong>Progresso:</strong> {book.progress ?? "—"}%
           </p>
           <p>
+            <strong>Início da leitura:</strong> {book.startedAt ? new Date(book.startedAt).toLocaleDateString() : "—"}
+          </p>
+          <p>
+            <strong>Conclusão:</strong> {book.finishedAt ? new Date(book.finishedAt).toLocaleDateString() : "—"}
+          </p>
+          <p>
             <strong>Review:</strong> {book.review || "—"}
           </p>
           <button onClick={() => setEditMode(true)}>Editar</button>
@@ -92,6 +112,12 @@ export default function BookDetails() {
           <br />
           <label>Progresso (%):</label>
           <input type="number" name="progress" value={form.progress} onChange={handleChange} min={0} max={100} />
+          <br />
+          <label>Início da leitura:</label>
+          <input type="date" name="startedAt" value={form.startedAt} onChange={handleChange} />
+          <br />
+          <label>Conclusão:</label>
+          <input type="date" name="finishedAt" value={form.finishedAt} onChange={handleChange} />
           <br />
           <label>Review:</label>
           <br />

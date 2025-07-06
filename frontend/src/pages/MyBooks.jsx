@@ -30,17 +30,35 @@ export default function MyBooks() {
   return (
     <div>
       <h2>Meus Livros</h2>
-      <ul>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
         {books.map((book) => (
-          <li key={book._id}>
+          <div
+            key={book._id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "1rem",
+              width: "220px",
+              borderRadius: "8px",
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            {book.coverImage && (
+              <img src={book.coverImage} alt="Capa" style={{ width: "100%", height: "auto", marginBottom: "0.5rem" }} />
+            )}
             <Link to={`/my-books/${book._id}`}>
               <strong>{book.title}</strong>
-            </Link>{" "}
-            — {book.author} ({book.genre})<p>{book.description}</p>
+            </Link>
+            <p style={{ margin: "0.25rem 0" }}>{book.author}</p>
+            <p style={{ fontSize: "0.9rem", color: "#555" }}>
+              {book.description?.substring(0, 100) || "Sem descrição"}...
+            </p>
+            <p style={{ fontSize: "0.85rem" }}>
+              <strong>Nota:</strong> {book.rating ?? "—"} | <strong>Progresso:</strong> {book.progress ?? 0}%
+            </p>
             <button onClick={() => handleDelete(book._id)}>Remover</button>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
