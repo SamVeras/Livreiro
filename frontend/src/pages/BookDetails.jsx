@@ -54,7 +54,11 @@ export default function BookDetails() {
     }
 
     try {
-      const res = await bookAPI.patch(`/books/${id}`, form, {
+      const cleanedForm = { ...form };
+      if (!cleanedForm.startedAt) delete cleanedForm.startedAt;
+      if (!cleanedForm.finishedAt) delete cleanedForm.finishedAt;
+
+      const res = await bookAPI.patch(`/books/${id}`, cleanedForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBook(res.data);

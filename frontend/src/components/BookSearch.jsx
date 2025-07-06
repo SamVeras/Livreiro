@@ -6,12 +6,29 @@ import { useAuth } from "../context/AuthContext";
 export default function BookSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+  const [added, setAdded] = useState({});
   const { token } = useAuth();
 
-  const search = async (e) => {
+  const fetchBooks = async (index = 0) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${index}&maxResults=10`
+      );
+      setResults(res.data.items || []);
+      setStartIndex(index);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const search = (e) => {
     e.preventDefault();
-    const res = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
-    setResults(res.data.items || []);
+    if (query.trim()) {
+      fetchBooks(0);
+    }
   };
 
   const addBook = async (book) => {
@@ -29,7 +46,7 @@ export default function BookSearch() {
       await bookAPI.post("/books", data, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Livro adicionado!");
+      setAdded((prev) => ({ ...prev, [book.id]: true }));
     } catch {
       alert("Erro ao adicionar livro");
     }
@@ -38,28 +55,67 @@ export default function BookSearch() {
   return (
     <div>
       <form onSubmit={search}>
-        <input placeholder="Buscar livro (título, autor...)" value={query} onChange={(e) => setQuery(e.target.value)} />
-        <button type="submit">Buscar</button>
+        <input
+          placeholder="Buscar livros (título, autor...)"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button type="submit" disabled={loading}>
+          Buscar
+        </button>
       </form>
 
-      <ul>
-        {results.map((book) => {
-          const info = book.volumeInfo;
-          return (
-            <li key={book.id} style={{ marginBottom: "1em" }}>
-              <strong>{info.title}</strong> — {(info.authors && info.authors.join(", ")) || "Autor desconhecido"}
-              <br />
-              <em>{(info.categories && info.categories.join(", ")) || "Sem categoria"}</em>
-              <p>{info.description?.substring(0, 200) || "Sem descrição"}</p>
-              {info.imageLinks?.thumbnail && (
-                <img src={info.imageLinks.thumbnail} alt="Capa" style={{ width: "120px" }} />
-              )}
-              <br />
-              <button onClick={() => addBook(book)}>Adicionar</button>
-            </li>
-          );
-        })}
-      </ul>
+      {loading && <p>Carregando resultados...</p>}
+
+      {!loading && results.length > 0 && (
+        <>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            {results.map((book) => {
+              const info = book.volumeInfo;
+              const cover = info.imageLinks?.thumbnail;
+              const shortDesc = info.description ? info.description.substring(0, 120) : "Sem descrição";
+
+              return (
+                <div
+                  key={book.id}
+                  style={{
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    padding: "1rem",
+                    width: "220px",
+                    backgroundColor: "#f9f9f9",
+                  }}
+                >
+                  {cover && <img src={cover} alt="Capa" style={{ width: "100%" }} />}
+                  <strong>{info.title}</strong>
+                  <p>{(info.authors && info.authors.join(", ")) || "Autor desconhecido"}</p>
+                  <p style={{ fontSize: "0.85rem" }}>
+                    {shortDesc}
+                    {info.description?.length > 120 && "..."}
+                  </p>
+                  <button disabled={added[book.id]} onClick={() => addBook(book)} style={{ marginTop: "0.5rem" }}>
+                    {added[book.id] ? "✅ Adicionado" : "Adicionar"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <div style={{ marginTop: "1rem" }}>
+            {startIndex >= 10 && <button onClick={() => fetchBooks(startIndex - 10)}>⬅️ Anterior</button>}
+            <button onClick={() => fetchBooks(startIndex + 10)} style={{ marginLeft: "0.5rem" }}>
+              ➡️ Próxima
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
