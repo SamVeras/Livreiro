@@ -1,0 +1,10 @@
+{
+  "name": "dev-runner",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run dev --prefix ../frontend\" \"npm start --prefix ../auth-service\" \"npm start --prefix ../book-service\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

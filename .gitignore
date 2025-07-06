@@ -1,0 +1,13 @@
+auth-service/node_modules/
+book-service/node_modules/
+frontend/node_modules/
+
+auth-service/.env
+book-service/.env
+frontend/.env
+
+frontend/dist/
+
+**/npm-debug.log*
+.DS_Store
+Thumbs.db
