@@ -37,8 +37,8 @@ router.patch("/:id", auth, async (req, res) => {
     if (rating !== undefined) book.rating = rating;
     if (progress !== undefined) book.progress = progress;
     if (review !== undefined) book.review = review;
-    if (startedAt !== undefined) book.startedAt = new Date(startedAt);
-    if (finishedAt !== undefined) book.finishedAt = new Date(finishedAt);
+    if (startedAt !== undefined) book.startedAt = startedAt ? new Date(startedAt) : undefined;
+    if (finishedAt !== undefined) book.finishedAt = finishedAt ? new Date(finishedAt) : undefined;
 
     await book.save();
     res.json(book);
