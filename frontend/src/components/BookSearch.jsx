@@ -1,23 +1,23 @@
 import { useState } from "react";
 import { bookAPI } from "../api/api";
 import { useAuth } from "../context/AuthContext";
-import { searchBooks_OpenLibrary, getBookDetails_OpenLibrary, getCoverImageUrl } from "../utils/bookProviders";
+import { searchBooks_Google } from "../utils/bookProviders";
 
 export default function BookSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [startIndex, setStartIndex] = useState(0);
   const [added, setAdded] = useState({});
   const { token } = useAuth();
 
-  const search = async (p = 1) => {
+  const search = async (index = 0) => {
     if (!query.trim()) return;
     setLoading(true);
     try {
-      const { results } = await searchBooks_OpenLibrary(query, p);
+      const { results, hasMore } = await searchBooks_Google(query, index);
       setResults(results);
-      setPage(p);
+      setStartIndex(index);
     } finally {
       setLoading(false);
     }
@@ -25,17 +25,16 @@ export default function BookSearch() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    search(1);
+    search(0);
   };
 
   const addBook = async (book) => {
-    const extra = await getBookDetails_OpenLibrary(book.workKey);
     const data = {
       title: book.title,
       author: book.author,
-      genre: extra.genre,
-      description: extra.description,
-      coverImage: getCoverImageUrl(book.coverId),
+      genre: book.genre,
+      description: book.description,
+      coverImage: book.coverImage,
       publishedDate: book.publishedDate,
     };
 
@@ -70,12 +69,8 @@ export default function BookSearch() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {results.map((book) => (
               <div key={book.id} className="border rounded-xl p-4 shadow bg-white hover:shadow-md transition">
-                {book.coverId && (
-                  <img
-                    src={getCoverImageUrl(book.coverId)}
-                    alt="Capa"
-                    className="w-full h-60 object-cover rounded mb-3"
-                  />
+                {book.coverImage && (
+                  <img src={book.coverImage} alt="Capa" className="w-full h-60 object-cover rounded mb-3" />
                 )}
                 <h3 className="text-lg font-bold mb-1">{book.title}</h3>
                 <p className="text-sm text-gray-600">{book.author}</p>
@@ -96,12 +91,12 @@ export default function BookSearch() {
           </div>
 
           <div className="flex gap-2 mt-6">
-            {page > 1 && (
-              <button onClick={() => search(page - 1)} className="px-4 py-1 border rounded hover:bg-gray-100">
+            {startIndex >= 12 && (
+              <button onClick={() => search(startIndex - 12)} className="px-4 py-1 border rounded hover:bg-gray-100">
                 ⬅️ Anterior
               </button>
             )}
-            <button onClick={() => search(page + 1)} className="px-4 py-1 border rounded hover:bg-gray-100">
+            <button onClick={() => search(startIndex + 12)} className="px-4 py-1 border rounded hover:bg-gray-100">
               ➡️ Próxima
             </button>
           </div>

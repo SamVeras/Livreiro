@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 export default function Welcome() {
   return (
-    <div className="bg-white">
-      <div className="max-w-xl mx-auto p-6 text-center">
+    <div className="">
+      <div className="max-w-xl mx-auto p-6 text-center bg-white rounded-lg border shadow">
         <h2 className="text-3xl font-bold mb-4">Bem-vindo!</h2>
         <p className="text-gray-700 mb-6">
           Registre, acompanhe e avalie os livros que você leu ou está lendo.

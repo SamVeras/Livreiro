@@ -1,42 +1,28 @@
 import axios from "axios";
 
-function mapOpenLibraryResults(raw) {
-  return raw.docs.map((doc) => ({
-    id: doc.key, // ex: "/works/OL12345W"
-    title: doc.title || "Sem título",
-    author: doc.author_name?.[0] || "Autor desconhecido",
-    coverId: doc.cover_i,
-    publishedDate: doc.first_publish_year?.toString() || "",
-    workKey: doc.key, // usado para buscar dados detalhados depois
-  }));
+// Transforma resultado da Google Books API em formato padronizado
+function mapGoogleBooksResults(items) {
+  return (items || []).map((item) => {
+    const info = item.volumeInfo;
+    return {
+      id: item.id,
+      title: info.title || "Sem título",
+      author: info.authors?.[0] || "Autor desconhecido",
+      description: info.description || "Sem descrição",
+      genre: info.categories?.[0] || "Gênero indefinido",
+      coverImage: info.imageLinks?.thumbnail || "",
+      publishedDate: info.publishedDate || "",
+    };
+  });
 }
 
-export async function searchBooks_OpenLibrary(query, page = 1) {
-  const res = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&page=${page}`);
+// Busca livros da Google Books API
+export async function searchBooks_Google(query, startIndex = 0) {
+  const res = await axios.get(
+    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&startIndex=${startIndex}&maxResults=12`
+  );
   return {
-    results: mapOpenLibraryResults(res.data),
-    hasMore: page * 100 < res.data.numFound,
+    results: mapGoogleBooksResults(res.data.items),
+    hasMore: res.data.totalItems > startIndex + 12,
   };
-}
-
-export async function getBookDetails_OpenLibrary(workKey) {
-  try {
-    const res = await axios.get(`https://openlibrary.org${workKey}.json`);
-    const desc = res.data.description;
-    const subject = res.data.subjects?.[0];
-
-    return {
-      description: typeof desc === "string" ? desc : desc?.value || "Sem descrição",
-      genre: subject || "Gênero indefinido",
-    };
-  } catch {
-    return {
-      description: "Sem descrição",
-      genre: "Gênero indefinido",
-    };
-  }
-}
-
-export function getCoverImageUrl(coverId) {
-  return coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : "";
 }
