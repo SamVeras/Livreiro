@@ -13,6 +13,7 @@ services:
     ports:
       - "3001:3001"
     environment:
+      - PORT=3001
       - MONGO_URI=mongodb://mongo:27017/auth
       - JWT_SECRET=chave_secreta
     depends_on:
@@ -23,7 +24,9 @@ services:
     ports:
       - "3002:3002"
     environment:
+      - PORT=3002
       - MONGO_URI=mongodb://mongo:27017/books
+      - JWT_SECRET=chave_secreta
     depends_on:
       - mongo
 
@@ -32,8 +35,8 @@ services:
     ports:
         - "4173:4173"
     environment:
-        - VITE_API_AUTH=http://localhost:3001
-        - VITE_API_BOOK=http://localhost:3002
+        - VITE_API_AUTH=http://localhost:3001/api/auth
+        - VITE_API_BOOK=http://localhost:3002/api
     depends_on:
         - auth-service
         - book-service

@@ -86,6 +86,7 @@ As variáveis já estão definidas no `docker-compose.yml` e nos arquivos `.env`
 ### auth-service/.env
 
 ```env
+PORT=3001
 MONGO_URI=mongodb://mongo:27017/auth
 JWT_SECRET=sua_chave_jwt
 ```
@@ -93,14 +94,16 @@ JWT_SECRET=sua_chave_jwt
 ### book-service/.env
 
 ```env
+PORT=3002
 MONGO_URI=mongodb://mongo:27017/books
+JWT_SECRET=sua_chave_jwt
 ```
 
 ### frontend/.env
 
 ```env
-VITE_API_AUTH=http://localhost:3001
-VITE_API_BOOK=http://localhost:3002
+VITE_API_AUTH=http://localhost:3001/api/auth
+VITE_API_BOOK=http://localhost:3002/api
 ```
 
 ---
