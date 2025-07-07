@@ -8,7 +8,7 @@
 
 - Registro e login de usuário com autenticação via JWT
 - Busca de livros usando a API do Google Books
-- Adição de livros com dados automáticos da API (título, autor, capa, data, etc.)
+- Adição de livros com dados automáticos da API (título, autor, capa, data etc.)
 - Lista de livros adicionados por cada usuário
 - Edição de dados pessoais do livro: nota, progresso, review, datas
 - Remoção de livros
@@ -17,28 +17,28 @@
 
 ## Tecnologias Utilizadas
 
-### Backend:
+### Backend
 
 - Node.js + Express.js
 - MongoDB + Mongoose
 - JWT para autenticação
-- Divisão em microsserviços:
+- Microsserviços:
   - `auth-service`: autenticação
   - `book-service`: gerenciamento de livros
 
-### Frontend:
+### Frontend
 
-- React + Vite
+- React (com Vite)
 - React Router DOM
 - Tailwind CSS
 
-### Integrações:
+### Integrações
 
-- API do Google Books (para busca e metadados dos livros)
+- API do Google Books
 - Railway (deploy em nuvem)
 - Docker + Docker Compose
 
-## 🗂 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 Livreiro/
@@ -81,7 +81,7 @@ Acesse o sistema em: [http://localhost:4173](http://localhost:4173)
 
 ## Variáveis de Ambiente
 
-As variáveis já estão definidas no `docker-compose.yml` e nos `.env` de cada serviço. Se quiser configurar manualmente:
+As variáveis já estão definidas no `docker-compose.yml` e nos arquivos `.env` de cada serviço. Se quiser configurar manualmente:
 
 ### auth-service/.env
 
@@ -107,10 +107,10 @@ VITE_API_BOOK=http://localhost:3002
 
 ## ☁️ Deploy em Produção
 
-O projeto está hospedado na Railway.
+O projeto está hospedado na Railway:
 
 - Railway detecta automaticamente o `docker-compose.yml`
 - MongoDB roda como container com volume persistente
-- Variáveis de ambiente podem ser configuradas pelo painel do Railway
-
----
+- As variáveis de ambiente podem ser configuradas pelo painel do Railway
+- O sistema pode ser acessado publicamente em:  
+  [https://livreiro.up.railway.app](https://livreiro.up.railway.app)
