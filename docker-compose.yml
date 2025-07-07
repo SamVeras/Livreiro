@@ -1,0 +1,42 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    container_name: livreiro_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/auth
+      - JWT_SECRET=chave_secreta
+    depends_on:
+      - mongo
+
+  book-service:
+    build: ./book-service
+    ports:
+      - "3002:3002"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/books
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    ports:
+        - "4173:4173"
+    environment:
+        - VITE_API_AUTH=http://localhost:3001
+        - VITE_API_BOOK=http://localhost:3002
+    depends_on:
+        - auth-service
+        - book-service
+
+volumes:
+  mongo_data:
