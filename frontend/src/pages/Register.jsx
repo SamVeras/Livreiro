@@ -16,27 +16,54 @@ export default function Register() {
     e.preventDefault();
     try {
       await authAPI.post("/register", form);
-
-      // login automático após registro
       const res = await authAPI.post("/login", {
         email: form.email,
         password: form.password,
       });
-
       login(res.data.token, res.data.name);
       navigate("/");
-    } catch (err) {
+    } catch {
       alert("Erro ao registrar ou fazer login.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Registro</h2>
-      <input name="name" placeholder="Nome" value={form.name} onChange={handleChange} />
-      <input name="email" placeholder="Email" value={form.email} onChange={handleChange} />
-      <input name="password" type="password" placeholder="Senha" value={form.password} onChange={handleChange} />
-      <button type="submit">Registrar</button>
-    </form>
+    <div className="max-w-md mx-auto p-6 mt-8 border rounded shadow bg-white rounded-lg">
+      <h2 className="text-2xl font-bold mb-4 text-center">Criar Conta</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <label className="block">
+          Nome:
+          <input
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            className="w-full mt-1 px-3 py-2 border rounded"
+          />
+        </label>
+        <label className="block">
+          Email:
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full mt-1 px-3 py-2 border rounded"
+          />
+        </label>
+        <label className="block">
+          Senha:
+          <input
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full mt-1 px-3 py-2 border rounded"
+          />
+        </label>
+        <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
+          Registrar
+        </button>
+      </form>
+    </div>
   );
 }

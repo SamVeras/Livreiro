@@ -30,7 +30,6 @@ export default function BookSearch() {
 
   const addBook = async (book) => {
     const extra = await getBookDetails_OpenLibrary(book.workKey);
-
     const data = {
       title: book.title,
       author: book.author,
@@ -51,10 +50,15 @@ export default function BookSearch() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Buscar livros" value={query} onChange={(e) => setQuery(e.target.value)} />
-        <button type="submit" disabled={loading}>
+    <div className="px-4">
+      <form onSubmit={handleSubmit} className="my-6 flex gap-2">
+        <input
+          placeholder="Buscar livros..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="flex-1 px-4 py-2 border rounded shadow"
+        />
+        <button type="submit" disabled={loading} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           Buscar
         </button>
       </form>
@@ -63,45 +67,41 @@ export default function BookSearch() {
 
       {!loading && results.length > 0 && (
         <>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "1rem",
-              marginTop: "1rem",
-            }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {results.map((book) => (
-              <div
-                key={book.id}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "8px",
-                  padding: "1rem",
-                  width: "220px",
-                  backgroundColor: "#f9f9f9",
-                }}
-              >
+              <div key={book.id} className="border rounded-xl p-4 shadow bg-white hover:shadow-md transition">
                 {book.coverId && (
                   <img
                     src={getCoverImageUrl(book.coverId)}
                     alt="Capa"
-                    style={{ width: "100%", marginBottom: "0.5rem" }}
+                    className="w-full h-60 object-cover rounded mb-3"
                   />
                 )}
-                <strong>{book.title}</strong>
-                <p>{book.author}</p>
-                <p style={{ fontSize: "0.85rem" }}>Publicado em: {book.publishedDate || "—"}</p>
-                <button disabled={added[book.id]} onClick={() => addBook(book)} style={{ marginTop: "0.5rem" }}>
+                <h3 className="text-lg font-bold mb-1">{book.title}</h3>
+                <p className="text-sm text-gray-600">{book.author}</p>
+                <p className="text-xs text-gray-500 mt-1">{book.publishedDate || "Data desconhecida"}</p>
+                <button
+                  disabled={added[book.id]}
+                  onClick={() => addBook(book)}
+                  className={`mt-4 w-full py-1 rounded ${
+                    added[book.id]
+                      ? "bg-gray-400 text-white cursor-not-allowed"
+                      : "bg-green-600 text-white hover:bg-green-700"
+                  }`}
+                >
                   {added[book.id] ? "✅ Adicionado" : "Adicionar"}
                 </button>
               </div>
             ))}
           </div>
 
-          <div style={{ marginTop: "1rem" }}>
-            {page > 1 && <button onClick={() => search(page - 1)}>⬅️ Anterior</button>}
-            <button onClick={() => search(page + 1)} style={{ marginLeft: "0.5rem" }}>
+          <div className="flex gap-2 mt-6">
+            {page > 1 && (
+              <button onClick={() => search(page - 1)} className="px-4 py-1 border rounded hover:bg-gray-100">
+                ⬅️ Anterior
+              </button>
+            )}
+            <button onClick={() => search(page + 1)} className="px-4 py-1 border rounded hover:bg-gray-100">
               ➡️ Próxima
             </button>
           </div>

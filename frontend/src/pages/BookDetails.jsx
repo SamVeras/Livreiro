@@ -53,11 +53,11 @@ export default function BookDetails() {
       return;
     }
 
-    try {
-      const cleanedForm = { ...form };
-      if (!cleanedForm.startedAt) delete cleanedForm.startedAt;
-      if (!cleanedForm.finishedAt) delete cleanedForm.finishedAt;
+    const cleanedForm = { ...form };
+    if (!cleanedForm.startedAt) delete cleanedForm.startedAt;
+    if (!cleanedForm.finishedAt) delete cleanedForm.finishedAt;
 
+    try {
       const res = await bookAPI.patch(`/books/${id}`, cleanedForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -68,69 +68,146 @@ export default function BookDetails() {
     }
   };
 
-  if (!book) return <p>Carregando...</p>;
+  if (!book) return <p className="p-4">Carregando...</p>;
 
   return (
-    <div>
-      <h2>{book.title}</h2>
-      {book.coverImage && <img src={book.coverImage} alt="Capa" style={{ width: "150px" }} />}
-      <p>
-        <strong>Autor:</strong> {book.author}
-      </p>
-      <p>
-        <strong>Gênero:</strong> {book.genre}
-      </p>
-      <p>
-        <strong>Publicado em:</strong> {book.publishedDate || "—"}
-      </p>
-      <p>
-        <strong>Adicionado em:</strong> {new Date(book.createdAt).toLocaleDateString()}
-      </p>
-      <p>
-        <strong>Descrição:</strong> {book.description}
-      </p>
+    <div className="max-w-5xl mx-auto p-4">
+      <div className="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row gap-6">
+        {/* Informações principais */}
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold mb-2">{book.title}</h2>
+          <p className="text-gray-700">
+            <strong>Autor:</strong> {book.author}
+          </p>
+          <p className="text-gray-700">
+            <strong>Gênero:</strong> {book.genre}
+          </p>
+          <p className="text-gray-700">
+            <strong>Publicado em:</strong> {book.publishedDate || "—"}
+          </p>
+          <p className="text-gray-700">
+            <strong>Adicionado em:</strong> {new Date(book.createdAt).toLocaleDateString()}
+          </p>
 
-      {!editMode ? (
-        <div>
-          <p>
-            <strong>Nota:</strong> {book.rating ?? "—"}
-          </p>
-          <p>
-            <strong>Progresso:</strong> {book.progress ?? "—"}%
-          </p>
-          <p>
-            <strong>Início da leitura:</strong> {book.startedAt ? new Date(book.startedAt).toLocaleDateString() : "—"}
-          </p>
-          <p>
-            <strong>Conclusão:</strong> {book.finishedAt ? new Date(book.finishedAt).toLocaleDateString() : "—"}
-          </p>
-          <p>
-            <strong>Review:</strong> {book.review || "—"}
-          </p>
-          <button onClick={() => setEditMode(true)}>Editar</button>
+          <div className="mt-4">
+            <p className="font-semibold">Descrição:</p>
+            <p className="text-sm text-gray-800 mt-1 whitespace-pre-line">{book.description}</p>
+          </div>
         </div>
-      ) : (
-        <div>
-          <label>Nota (0 a 10):</label>
-          <input type="number" name="rating" value={form.rating} onChange={handleChange} min={0} max={10} />
-          <br />
-          <label>Progresso (%):</label>
-          <input type="number" name="progress" value={form.progress} onChange={handleChange} min={0} max={100} />
-          <br />
-          <label>Início da leitura:</label>
-          <input type="date" name="startedAt" value={form.startedAt} onChange={handleChange} />
-          <br />
-          <label>Conclusão:</label>
-          <input type="date" name="finishedAt" value={form.finishedAt} onChange={handleChange} />
-          <br />
-          <label>Review:</label>
-          <br />
-          <textarea name="review" value={form.review} onChange={handleChange} rows={4} />
-          <br />
-          <button onClick={handleSave}>Salvar</button>
-          <button onClick={() => setEditMode(false)}>Cancelar</button>
-        </div>
-      )}
+
+        {/* Capa */}
+        {book.coverImage && (
+          <div className="w-full md:w-48 flex-shrink-0">
+            <img src={book.coverImage} alt="Capa" className="w-full h-auto rounded shadow border" />
+          </div>
+        )}
+      </div>
+
+      {/* Área separada para avaliação */}
+      <div className="bg-white mt-6 p-6 rounded-lg shadow space-y-4">
+        {!editMode ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <p>
+                <strong>Nota:</strong> {book.rating ?? "—"}
+              </p>
+              <p>
+                <strong>Progresso:</strong> {book.progress ?? "—"}%
+              </p>
+              <p>
+                <strong>Início da leitura:</strong>{" "}
+                {book.startedAt ? new Date(book.startedAt).toLocaleDateString() : "—"}
+              </p>
+              <p>
+                <strong>Conclusão:</strong> {book.finishedAt ? new Date(book.finishedAt).toLocaleDateString() : "—"}
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold">Review:</p>
+              <p className="text-sm text-gray-800 whitespace-pre-line">{book.review || "—"}</p>
+            </div>
+            <button
+              onClick={() => setEditMode(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+            >
+              Editar
+            </button>
+          </>
+        ) : (
+          <div className="space-y-3">
+            <label className="block">
+              Nota (0 a 10):
+              <input
+                type="number"
+                name="rating"
+                value={form.rating}
+                onChange={handleChange}
+                min={0}
+                max={10}
+                className="w-full border px-2 py-1 rounded mt-1"
+              />
+            </label>
+
+            <label className="block">
+              Progresso (%):
+              <input
+                type="number"
+                name="progress"
+                value={form.progress}
+                onChange={handleChange}
+                min={0}
+                max={100}
+                className="w-full border px-2 py-1 rounded mt-1"
+              />
+            </label>
+
+            <label className="block">
+              Início da leitura:
+              <input
+                type="date"
+                name="startedAt"
+                value={form.startedAt}
+                onChange={handleChange}
+                className="w-full border px-2 py-1 rounded mt-1"
+              />
+            </label>
+
+            <label className="block">
+              Conclusão:
+              <input
+                type="date"
+                name="finishedAt"
+                value={form.finishedAt}
+                onChange={handleChange}
+                className="w-full border px-2 py-1 rounded mt-1"
+              />
+            </label>
+
+            <label className="block">
+              Review:
+              <textarea
+                name="review"
+                value={form.review}
+                onChange={handleChange}
+                className="w-full border px-2 py-1 rounded mt-1"
+                rows={4}
+              />
+            </label>
+
+            <div className="flex gap-2">
+              <button onClick={handleSave} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                Salvar
+              </button>
+              <button
+                onClick={() => setEditMode(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
