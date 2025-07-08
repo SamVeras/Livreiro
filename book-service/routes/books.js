@@ -3,6 +3,10 @@ const Book = require("../models/Book");
 const auth = require("../middleware/auth");
 const router = express.Router();
 
+router.get("/health", (req, res) => {
+  res.json({ status: "OK", service: "book-service" });
+});
+
 router.post("/", auth, async (req, res) => {
   const book = await Book.create({ ...req.body, ownerId: req.userId });
   res.status(201).json(book);
@@ -55,10 +59,6 @@ router.delete("/:id", auth, async (req, res) => {
   }
   await book.deleteOne();
   res.json({ message: "Livro removido com sucesso." });
-});
-
-router.get("/health", (req, res) => {
-  res.json({ status: "OK", service: "book-service" });
 });
 
 module.exports = router;
