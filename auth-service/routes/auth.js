@@ -26,4 +26,8 @@ router.post("/login", async (req, res) => {
   res.json({ token, name: user.name });
 });
 
+router.get("/health", (req, res) => {
+  res.json({ status: "OK", service: "auth-service" });
+});
+
 module.exports = router;

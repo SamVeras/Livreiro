@@ -57,4 +57,8 @@ router.delete("/:id", auth, async (req, res) => {
   res.json({ message: "Livro removido com sucesso." });
 });
 
+router.get("/health", (req, res) => {
+  res.json({ status: "OK", service: "book-service" });
+});
+
 module.exports = router;
