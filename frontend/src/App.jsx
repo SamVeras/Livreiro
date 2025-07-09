@@ -17,7 +17,7 @@ export default function App() {
   const { name, logout, token } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-200 via-orange-100 to-rose-200">
+    <div className="min-h-screen bg-gradient-to-br from-amber-200 via-orange-100 to-rose-200 flex flex-col">
       <nav className="bg-white/90 backdrop-blur-md border-b border-secondary-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -77,7 +77,7 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <Routes>
           <Route path="/" element={token ? <Home /> : <Welcome />} />
           <Route
@@ -109,19 +109,20 @@ export default function App() {
         </Routes>
       </main>
 
-      <footer className="bg-white/90 backdrop-blur-md border-t border-secondary-200 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <footer className="bg-gray-900/80 backdrop-blur-sm border-t border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0.5">
           <div className="text-center">
-            <p className="text-secondary-600 text-sm">
+            <p className="text-gray-400 text-[10px]">
               Criado por{" "}
               <a
                 href="https://github.com/SamVeras"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
               >
                 Samuel Veras
-              </a>
+              </a>{" "}
+              • {new Date().getFullYear()}
             </p>
           </div>
         </div>
