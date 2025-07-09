@@ -128,12 +128,20 @@ export default function BookSearch() {
                       src={book.coverImage}
                       alt={`Capa de ${book.title}`}
                       className="w-full h-80 object-cover group-hover:brightness-110 transition-all duration-300"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.nextSibling.style.display = "flex";
+                      }}
                     />
-                  ) : (
-                    <div className="w-full h-80 bg-gradient-to-br from-secondary-100 to-secondary-200 flex items-center justify-center">
-                      <span className="text-6xl text-secondary-400">📚</span>
-                    </div>
-                  )}
+                  ) : null}
+                  <div
+                    className={`w-full h-80 bg-gradient-to-br from-secondary-100 to-secondary-200 flex items-center justify-center ${
+                      book.coverImage ? "hidden" : ""
+                    }`}
+                  >
+                    <span className="text-6xl text-secondary-400">📚</span>
+                  </div>
                 </div>
 
                 {/* Book Info */}

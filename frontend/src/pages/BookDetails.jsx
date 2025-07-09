@@ -141,12 +141,20 @@ export default function BookDetails() {
                 src={book.coverImage}
                 alt={`Capa de ${book.title}`}
                 className="w-full h-auto rounded-lg shadow-material-lg"
+                loading="lazy"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.nextSibling.style.display = "flex";
+                }}
               />
-            ) : (
-              <div className="w-full h-96 bg-gradient-to-br from-secondary-100 to-secondary-200 rounded-lg flex items-center justify-center">
-                <span className="text-8xl text-secondary-400">📚</span>
-              </div>
-            )}
+            ) : null}
+            <div
+              className={`w-full h-96 bg-gradient-to-br from-secondary-100 to-secondary-200 rounded-lg flex items-center justify-center ${
+                book.coverImage ? "hidden" : ""
+              }`}
+            >
+              <span className="text-8xl text-secondary-400">📚</span>
+            </div>
           </div>
 
           <div className="flex-1 space-y-6">

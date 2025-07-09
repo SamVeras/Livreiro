@@ -50,12 +50,20 @@ export default function Home() {
                           src={book.coverImage}
                           alt={`Capa de ${book.title}`}
                           className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            e.target.nextSibling.style.display = "flex";
+                          }}
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-100 to-secondary-200">
-                          <span className="text-5xl text-secondary-400">📚</span>
-                        </div>
-                      )}
+                      ) : null}
+                      <div
+                        className={`w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-100 to-secondary-200 ${
+                          book.coverImage ? "hidden" : ""
+                        }`}
+                      >
+                        <span className="text-5xl text-secondary-400">📚</span>
+                      </div>
                       {book.progress ? (
                         <div className="absolute left-0 bottom-0 w-full">
                           <div

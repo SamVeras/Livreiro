@@ -1,11 +1,19 @@
 export function normalizeGoogleBook(item) {
+  const imageLinks = item.volumeInfo?.imageLinks;
+  let coverImage = "";
+
+  if (imageLinks) {
+    coverImage =
+      imageLinks.extraLarge || imageLinks.large || imageLinks.medium || imageLinks.small || imageLinks.thumbnail || "";
+  }
+
   return {
     id: item.id,
     title: item.volumeInfo?.title || "",
     author: item.volumeInfo?.authors?.join(", ") || "",
     genre: item.volumeInfo?.categories?.join(", ") || "",
     description: item.volumeInfo?.description || "",
-    coverImage: item.volumeInfo?.imageLinks?.thumbnail || "",
+    coverImage: coverImage,
     publishedDate: item.volumeInfo?.publishedDate || "",
   };
 }
