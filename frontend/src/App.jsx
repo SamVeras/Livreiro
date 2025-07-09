@@ -108,6 +108,24 @@ export default function App() {
           />
         </Routes>
       </main>
+
+      <footer className="bg-white/90 backdrop-blur-md border-t border-secondary-200 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="text-center">
+            <p className="text-secondary-600 text-sm">
+              Criado por{" "}
+              <a
+                href="https://github.com/SamVeras"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+              >
+                Samuel Veras
+              </a>
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
