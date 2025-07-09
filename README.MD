@@ -1,37 +1,26 @@
 # Livreiro
 
-**Livreiro** é uma aplicação web onde usuários podem registrar e acompanhar livros que já leram, estão lendo ou planejam ler. Permite login, registro, busca de livros via API, adição com capa, descrição, gênero, datas, progresso de leitura, notas e review pessoal.
+Aplicação web para registrar e acompanhar livros lidos, em leitura ou planejados. Inclui autenticação, busca via API, progresso de leitura e reviews.
 
 **Site online:** [https://livreiro.up.railway.app](https://livreiro.up.railway.app)
 
 ## Funcionalidades
 
-- Registro e login de usuário com autenticação via JWT
-- Busca de livros usando a API do Google Books
-- Adição de livros com dados automáticos da API (título, autor, capa, data etc.)
-- Lista de livros adicionados por cada usuário
-- Edição de dados pessoais do livro: nota, progresso, review, datas
-- Remoção de livros
-- Interface com Tailwind CSS
-- Deploy em nuvem com Docker + Railway
+- Autenticação JWT
+- Busca de livros via Google Books API
+- Inserção manual de livros na interface
+- CRUD de livros com metadados automáticos
+- Progresso de leitura e reviews
+- Interface responsiva com Tailwind CSS
 
-## Tecnologias Utilizadas
+## Stack
 
-- **Frontend**: React, Vite, Tailwind CSS, React Router
-- **Backend**: Node.js, Express.js, MongoDB, Mongoose
-- **Autenticação**: JSON Web Tokens
-- **APIs Externas**: Google Books API
-- **Deploy (local ou nuvem)**: Docker, Railway
-- **Microsserviços**: `auth-service` (autenticação de usuário) e `book-service` (gerenciamento de livros)
+- **Frontend**: React, Vite, Tailwind CSS
+- **Backend**: Node.js, Express, MongoDB
+- **Arquitetura**: Microsserviços (auth-service, book-service)
+- **Deploy**: Docker + Railway
 
-## Como Rodar Localmente (com Docker Compose)
-
-### Pré-requisitos
-
-- Docker
-- Docker Compose
-
-### Passos
+## Executar Localmente
 
 ```bash
 git clone https://github.com/SamVeras/Livreiro.git
@@ -39,9 +28,7 @@ cd Livreiro
 docker compose up --build
 ```
 
-Acesse em: [http://localhost:4173](http://localhost:4173)
-
----
+Acesse: [http://localhost:4173](http://localhost:4173)
 
 ## Variáveis de Ambiente
 
@@ -72,9 +59,9 @@ Acesse em: [http://localhost:4173](http://localhost:4173)
 | `VITE_API_AUTH` | `http://localhost:3001/api/auth` |
 | `VITE_API_BOOK` | `http://localhost:3002/api`      |
 
-## Deploy em Produção (Railway)
+## Deploy
 
-Este projeto foi deployado em produção manualmente no Railway, com os serviços configurados individualmente.
+Deployado no Railway com serviços configurados separadamente.
 
 **Site online**: [livreiro.up.railway.app](https://livreiro.up.railway.app)
 
@@ -87,7 +74,7 @@ Este projeto foi deployado em produção manualmente no Railway, com os serviço
 - Os serviços `auth-service` e `book-service` foram configurados para expor _endpoints_ **públicos**, acessados pelo frontend.
 - Também foi necessário mudar os comandos de `build` e `start` (mais detalhes podem ser vistos no template).
 
-Caso queira, pode utilizar o [template de deploy no Railway](https://railway.com/deploy/ZdwvCQ?referralCode=BNYRM2), que replica essa configuração.
+**Template Railway:** [Deploy automático](https://railway.com/deploy/ZdwvCQ?referralCode=BNYRM2)
 
 ## Arquitetura
 
