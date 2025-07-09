@@ -5,9 +5,9 @@ export default function Welcome() {
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="text-center max-w-4xl mx-auto px-4">
         <div className="mb-12">
-          <div className="w-24 h-24 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-material-lg">
+          {/* <div className="w-24 h-24 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-material-lg">
             <span className="text-4xl">📚</span>
-          </div>
+          </div> */}
           <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 text-gradient">Livreiro</h1>
           <p className="text-xl text-secondary-600 mb-8 max-w-2xl mx-auto leading-relaxed">
             Gerencie sua biblioteca pessoal de livros.

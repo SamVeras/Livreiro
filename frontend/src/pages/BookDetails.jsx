@@ -44,6 +44,11 @@ export default function BookDetails() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
+    title: "",
+    author: "",
+    genre: "",
+    description: "",
+    publishedDate: "",
     rating: "",
     progress: "",
     review: "",
@@ -53,6 +58,11 @@ export default function BookDetails() {
   });
   const [errors, setErrors] = useState({});
   const [originalCoverImage, setOriginalCoverImage] = useState("");
+  const [originalTitle, setOriginalTitle] = useState("");
+  const [originalAuthor, setOriginalAuthor] = useState("");
+  const [originalGenre, setOriginalGenre] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
+  const [originalPublishedDate, setOriginalPublishedDate] = useState("");
 
   useEffect(() => {
     bookAPI
@@ -62,6 +72,11 @@ export default function BookDetails() {
       .then((res) => {
         setBook(res.data);
         setForm({
+          title: res.data.title || "",
+          author: res.data.author || "",
+          genre: res.data.genre || "",
+          description: res.data.description || "",
+          publishedDate: res.data.publishedDate || "",
           rating: res.data.rating ?? "",
           progress: res.data.progress ?? "",
           review: res.data.review || "",
@@ -70,6 +85,11 @@ export default function BookDetails() {
           coverImage: res.data.coverImage || "",
         });
         setOriginalCoverImage(res.data.originalCoverImage || res.data.coverImage || "");
+        setOriginalTitle(res.data.originalTitle || res.data.title || "");
+        setOriginalAuthor(res.data.originalAuthor || res.data.author || "");
+        setOriginalGenre(res.data.originalGenre || res.data.genre || "");
+        setOriginalDescription(res.data.originalDescription || res.data.description || "");
+        setOriginalPublishedDate(res.data.originalPublishedDate || res.data.publishedDate || "");
         setLoading(false);
       })
       .catch(() => {
@@ -85,6 +105,26 @@ export default function BookDetails() {
 
   const handleResetCover = () => {
     setForm((prev) => ({ ...prev, coverImage: originalCoverImage }));
+  };
+
+  const handleResetTitle = () => {
+    setForm((prev) => ({ ...prev, title: originalTitle }));
+  };
+
+  const handleResetAuthor = () => {
+    setForm((prev) => ({ ...prev, author: originalAuthor }));
+  };
+
+  const handleResetGenre = () => {
+    setForm((prev) => ({ ...prev, genre: originalGenre }));
+  };
+
+  const handleResetDescription = () => {
+    setForm((prev) => ({ ...prev, description: originalDescription }));
+  };
+
+  const handleResetPublishedDate = () => {
+    setForm((prev) => ({ ...prev, publishedDate: originalPublishedDate }));
   };
 
   const validateAll = () => {
@@ -276,6 +316,93 @@ export default function BookDetails() {
         ) : (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">Título</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    name="title"
+                    value={form.title}
+                    onChange={handleChange}
+                    className="input-field flex-1"
+                    placeholder="Título do livro"
+                    autoComplete="off"
+                  />
+                  <button type="button" onClick={handleResetTitle} className="btn-secondary px-3 py-2 text-xs">
+                    Restaurar
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">Autor</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    name="author"
+                    value={form.author}
+                    onChange={handleChange}
+                    className="input-field flex-1"
+                    placeholder="Nome do autor"
+                    autoComplete="off"
+                  />
+                  <button type="button" onClick={handleResetAuthor} className="btn-secondary px-3 py-2 text-xs">
+                    Restaurar
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">Gênero</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    name="genre"
+                    value={form.genre}
+                    onChange={handleChange}
+                    className="input-field flex-1"
+                    placeholder="Gênero literário"
+                    autoComplete="off"
+                  />
+                  <button type="button" onClick={handleResetGenre} className="btn-secondary px-3 py-2 text-xs">
+                    Restaurar
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">Descrição</label>
+                <div className="flex gap-2 items-center">
+                  <textarea
+                    name="description"
+                    value={form.description}
+                    onChange={handleChange}
+                    className="input-field flex-1"
+                    placeholder="Descrição detalhada do livro"
+                    rows={3}
+                  />
+                  <button type="button" onClick={handleResetDescription} className="btn-secondary px-3 py-2 text-xs">
+                    Restaurar
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">Publicado em</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="date"
+                    name="publishedDate"
+                    value={form.publishedDate}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                  <button type="button" onClick={handleResetPublishedDate} className="btn-secondary px-3 py-2 text-xs">
+                    Restaurar
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-secondary-700 mb-2">Avaliação (0 a 10)</label>
                 <input

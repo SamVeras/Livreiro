@@ -8,8 +8,23 @@ router.get("/health", (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
-  const { coverImage, ...rest } = req.body;
-  const book = await Book.create({ ...rest, coverImage, originalCoverImage: coverImage, ownerId: req.userId });
+  const { coverImage, title, author, genre, description, publishedDate, ...rest } = req.body;
+  const book = await Book.create({
+    ...rest,
+    title,
+    originalTitle: title,
+    author,
+    originalAuthor: author,
+    genre,
+    originalGenre: genre,
+    description,
+    originalDescription: description,
+    coverImage,
+    originalCoverImage: coverImage,
+    publishedDate,
+    originalPublishedDate: publishedDate,
+    ownerId: req.userId,
+  });
   res.status(201).json(book);
 });
 
@@ -38,14 +53,30 @@ router.patch("/:id", auth, async (req, res) => {
       return res.status(403).json({ error: "Você não tem permissão para editar este livro." });
     }
 
-    const { rating, progress, review, startedAt, finishedAt, coverImage } = req.body;
+    const {
+      rating,
+      progress,
+      review,
+      startedAt,
+      finishedAt,
+      coverImage,
+      title,
+      author,
+      genre,
+      description,
+      publishedDate,
+    } = req.body;
     if (rating !== undefined) book.rating = rating;
     if (progress !== undefined) book.progress = progress;
     if (review !== undefined) book.review = review;
     if (startedAt !== undefined) book.startedAt = startedAt ? new Date(startedAt) : undefined;
     if (finishedAt !== undefined) book.finishedAt = finishedAt ? new Date(finishedAt) : undefined;
     if (coverImage !== undefined) book.coverImage = coverImage;
-    // Never update originalCoverImage here
+    if (title !== undefined) book.title = title;
+    if (author !== undefined) book.author = author;
+    if (genre !== undefined) book.genre = genre;
+    if (description !== undefined) book.description = description;
+    if (publishedDate !== undefined) book.publishedDate = publishedDate;
 
     await book.save();
     res.json(book);

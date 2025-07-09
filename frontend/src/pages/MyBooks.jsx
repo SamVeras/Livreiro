@@ -58,7 +58,6 @@ export default function MyBooks() {
               <div className="relative">
                 <Link to={`/my-books/${book._id}`}>
                   {" "}
-                  {/* Make cover clickable */}
                   {book.coverImage ? (
                     <img
                       src={book.coverImage}
@@ -109,7 +108,6 @@ export default function MyBooks() {
                     <span className="font-medium text-secondary-700">{book.rating ? `${book.rating}/10` : "—"}</span>
                   </div>
                   <div className="flex items-center space-x-1">
-                    <span className="text-accent-500">📖</span>
                     <span className="font-medium text-secondary-700">{book.progress ? `${book.progress}%` : "0%"}</span>
                   </div>
                 </div>
