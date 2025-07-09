@@ -18,11 +18,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-200 via-orange-100 to-rose-200">
-      {/* Navigation */}
       <nav className="bg-white/90 backdrop-blur-md border-b border-secondary-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group">
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center shadow-material">
                 <span className="text-white font-bold text-lg">📖</span>
@@ -32,7 +30,6 @@ export default function App() {
               </span>
             </Link>
 
-            {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
               {!token ? (
                 <>
@@ -69,7 +66,6 @@ export default function App() {
               )}
             </div>
 
-            {/* Mobile menu button */}
             <div className="md:hidden">
               <button className="text-secondary-600 hover:text-primary-600">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,7 +77,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Routes>
           <Route path="/" element={token ? <Home /> : <Welcome />} />

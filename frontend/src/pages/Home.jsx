@@ -1,8 +1,27 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { bookAPI } from "../api/api";
 
 export default function Home() {
-  const { name } = useAuth();
+  const { name, token } = useAuth();
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!token) return;
+    bookAPI
+      .get("/books/mine", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setBooks(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [token]);
 
   return (
     <div className="space-y-8">
@@ -11,6 +30,43 @@ export default function Home() {
           Bem-vindo{name && `, ${name}`}!
         </h1>
       </div>
+      {token && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-display font-semibold mb-4 text-secondary-800 text-left">Sua Estante</h2>
+          {loading ? (
+            <div className="flex items-center justify-center min-h-[120px]">
+              <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+            </div>
+          ) : books.length === 0 ? (
+            <div className="text-secondary-600 text-center py-8">Nenhum livro na estante ainda.</div>
+          ) : (
+            <div>
+              <div className="flex gap-6 overflow-x-auto pb-4 pt-4 px-2 bookcase-scrollbar">
+                {books.map((book) => (
+                  <Link key={book._id} to={`/my-books/${book._id}`} className="flex-shrink-0 w-32 md:w-40 group">
+                    <div className="rounded-lg shadow-material-lg bg-white/80 h-48 md:h-60 flex items-center justify-center overflow-hidden transition-shadow border-b-8 border-amber-400">
+                      {book.coverImage ? (
+                        <img
+                          src={book.coverImage}
+                          alt={`Capa de ${book.title}`}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-100 to-secondary-200">
+                          <span className="text-5xl text-secondary-400">📚</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-2 text-sm font-medium text-secondary-800 line-clamp-2 text-center">
+                      {book.title}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         <Link to="/add" className="card p-8 text-center group transition-all duration-300">
           <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-material-lg group-hover:shadow-material-xl transition-shadow">

@@ -43,7 +43,6 @@ export default function MyBooks() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 text-gradient">Minha Biblioteca</h1>
         <p className="text-xl text-secondary-600">
@@ -52,27 +51,26 @@ export default function MyBooks() {
             : `${books.length} livro${books.length !== 1 ? "s" : ""} em sua coleção`}
         </p>
       </div>
-
-      {/* Books Grid */}
       {books.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {books.map((book) => (
             <div key={book._id} className="card group transition-all duration-300 overflow-hidden">
-              {/* Book Cover */}
               <div className="relative">
-                {book.coverImage ? (
-                  <img
-                    src={book.coverImage}
-                    alt={`Capa de ${book.title}`}
-                    className="w-full h-80 object-cover group-hover:brightness-110 transition-all duration-300"
-                  />
-                ) : (
-                  <div className="w-full h-80 bg-gradient-to-br from-secondary-100 to-secondary-200 flex items-center justify-center">
-                    <span className="text-6xl text-secondary-400">📚</span>
-                  </div>
-                )}
-
-                {/* Progress Overlay */}
+                <Link to={`/my-books/${book._id}`}>
+                  {" "}
+                  {/* Make cover clickable */}
+                  {book.coverImage ? (
+                    <img
+                      src={book.coverImage}
+                      alt={`Capa de ${book.title}`}
+                      className="w-full h-80 object-cover group-hover:brightness-110 transition-all duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-80 bg-gradient-to-br from-secondary-100 to-secondary-200 flex items-center justify-center">
+                      <span className="text-6xl text-secondary-400">📚</span>
+                    </div>
+                  )}
+                </Link>
                 {book.progress && (
                   <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-center">
                     <div className="text-sm font-medium">{book.progress}% lido</div>
@@ -85,25 +83,18 @@ export default function MyBooks() {
                   </div>
                 )}
               </div>
-
-              {/* Book Info */}
               <div className="p-6">
                 <Link to={`/my-books/${book._id}`} className="block group-hover:text-primary-600 transition-colors">
                   <h3 className="text-xl font-display font-semibold mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
                     {book.title}
                   </h3>
                 </Link>
-
                 <p className="text-secondary-600 font-medium mb-1">{book.author}</p>
-
                 <div className="flex items-center justify-between text-sm text-secondary-500 mb-3">
                   <span className="bg-secondary-100 px-2 py-1 rounded-full">{book.genre}</span>
                   <span>{book.publishedDate || "Data desconhecida"}</span>
                 </div>
-
                 <p className="text-secondary-600 text-sm line-clamp-3 mb-4">{book.description}</p>
-
-                {/* Rating and Progress */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-1">
                     <span className="text-yellow-500">⭐</span>
@@ -114,8 +105,6 @@ export default function MyBooks() {
                     <span className="font-medium text-secondary-700">{book.progress ? `${book.progress}%` : "0%"}</span>
                   </div>
                 </div>
-
-                {/* Actions */}
                 <div className="flex space-x-2">
                   <Link to={`/my-books/${book._id}`} className="flex-1 btn-accent text-center text-sm py-2">
                     Ver Detalhes
@@ -133,7 +122,6 @@ export default function MyBooks() {
           ))}
         </div>
       ) : (
-        /* Empty State */
         <div className="text-center py-16">
           <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-4xl">📚</span>

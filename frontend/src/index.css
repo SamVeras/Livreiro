@@ -66,3 +66,21 @@
     overflow: hidden;
   }
 }
+
+/* Custom scrollbar for bookcase (works on Firefox and Chromium) */
+.bookcase-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #f8b87d #fdecd8; /* thumb, track */
+}
+.bookcase-scrollbar::-webkit-scrollbar {
+  height: 10px;
+}
+.bookcase-scrollbar::-webkit-scrollbar-thumb {
+  background: #f8b87d;
+  border-radius: 6px;
+  border: 2px solid #fdecd8;
+}
+.bookcase-scrollbar::-webkit-scrollbar-track {
+  background: #fdecd8;
+  border-radius: 6px;
+}

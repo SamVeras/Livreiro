@@ -125,10 +125,8 @@ export default function BookDetails() {
 
   return (
     <div className="space-y-8">
-      {/* Book Header */}
       <div className="card p-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Book Cover */}
           <div className="lg:w-80 flex-shrink-0">
             {book.coverImage ? (
               <img
@@ -143,7 +141,6 @@ export default function BookDetails() {
             )}
           </div>
 
-          {/* Book Info */}
           <div className="flex-1 space-y-6">
             <div>
               <h1 className="text-4xl font-display font-bold mb-4 text-gradient">{book.title}</h1>
@@ -194,7 +191,6 @@ export default function BookDetails() {
         </div>
       </div>
 
-      {/* Reading Progress & Review */}
       <div className="card p-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-display font-semibold text-secondary-800">Minha Leitura</h2>
@@ -207,7 +203,6 @@ export default function BookDetails() {
 
         {!editMode ? (
           <div className="space-y-6">
-            {/* Progress Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center p-4 bg-primary-50 rounded-lg">
                 <div className="text-2xl font-bold text-primary-600 mb-1">
@@ -238,7 +233,6 @@ export default function BookDetails() {
               </div>
             </div>
 
-            {/* Progress Bar */}
             {book.progress && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm text-secondary-600">
@@ -254,7 +248,6 @@ export default function BookDetails() {
               </div>
             )}
 
-            {/* Review */}
             {book.review && (
               <div>
                 <h3 className="text-lg font-semibold text-secondary-800 mb-3">Minha Resenha</h3>
@@ -265,7 +258,6 @@ export default function BookDetails() {
             )}
           </div>
         ) : (
-          /* Edit Form */
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>

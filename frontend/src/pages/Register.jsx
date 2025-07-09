@@ -80,15 +80,12 @@ export default function Register() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-accent-500 to-primary-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-material-lg">
             <span className="text-2xl">✨</span>
           </div>
           <h1 className="text-3xl font-display font-bold mb-2 text-gradient">Criar Conta</h1>
         </div>
-
-        {/* Register Form */}
         <div className="card p-8">
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div>
@@ -104,7 +101,6 @@ export default function Register() {
               />
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
-
             <div>
               <label className="block text-sm font-medium text-secondary-700 mb-2">Email</label>
               <input
@@ -119,7 +115,6 @@ export default function Register() {
               />
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
-
             <div>
               <label className="block text-sm font-medium text-secondary-700 mb-2">Senha</label>
               <input
@@ -134,7 +129,6 @@ export default function Register() {
               />
               {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
-
             {serverError && <div className="text-red-600 text-sm text-center">{serverError}</div>}
             <button
               type="submit"
@@ -151,8 +145,6 @@ export default function Register() {
               )}
             </button>
           </form>
-
-          {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-secondary-200"></div>
@@ -161,8 +153,6 @@ export default function Register() {
               <span className="px-2 bg-white text-secondary-500">ou</span>
             </div>
           </div>
-
-          {/* Login Link */}
           <div className="text-center">
             <p className="text-secondary-600">
               Já tem uma conta?{" "}

@@ -1,28 +1,23 @@
-import axios from "axios";
-
-// Transforma resultado da Google Books API em formato padronizado
-function mapGoogleBooksResults(items) {
-  return (items || []).map((item) => {
-    const info = item.volumeInfo;
-    return {
-      id: item.id,
-      title: info.title || "Sem título",
-      author: info.authors?.[0] || "Autor desconhecido",
-      description: info.description || "Sem descrição",
-      genre: info.categories?.[0] || "Gênero indefinido",
-      coverImage: info.imageLinks?.thumbnail || "",
-      publishedDate: info.publishedDate || "",
-    };
-  });
+export function normalizeGoogleBook(item) {
+  return {
+    id: item.id,
+    title: item.volumeInfo?.title || "",
+    author: item.volumeInfo?.authors?.join(", ") || "",
+    genre: item.volumeInfo?.categories?.join(", ") || "",
+    description: item.volumeInfo?.description || "",
+    coverImage: item.volumeInfo?.imageLinks?.thumbnail || "",
+    publishedDate: item.volumeInfo?.publishedDate || "",
+  };
 }
 
-// Busca livros da Google Books API
 export async function searchBooks_Google(query, startIndex = 0) {
-  const res = await axios.get(
-    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&startIndex=${startIndex}&maxResults=12`
-  );
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+    query
+  )}&startIndex=${startIndex}&maxResults=12`;
+  const res = await fetch(url);
+  const data = await res.json();
   return {
-    results: mapGoogleBooksResults(res.data.items),
-    hasMore: res.data.totalItems > startIndex + 12,
+    results: (data.items || []).map(normalizeGoogleBook),
+    hasMore: (data.totalItems || 0) > startIndex + 12,
   };
 }
