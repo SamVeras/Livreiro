@@ -129,9 +129,6 @@ export default function MyBooks() {
         </div>
       ) : (
         <div className="text-center py-16">
-          <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="text-4xl">📚</span>
-          </div>
           <h3 className="text-2xl font-display font-semibold mb-4 text-secondary-800">Sua biblioteca está vazia</h3>
           <p className="text-secondary-600 mb-8 max-w-md mx-auto">
             Comece adicionando seu primeiro livro para construir sua coleção pessoal
