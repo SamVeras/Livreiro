@@ -17,46 +17,72 @@ export default function App() {
   const { name, logout, token } = useAuth();
 
   return (
-    // bg-gradient-to-br from-blue-300
-    <div className="min-h-screen bg-gradient-to-br from-amber-200 to-rose-400 text-gray-900">
-      <nav className="bg-white shadow p-4">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-4">
-          <Link to="/" className="font-bold text-lg">
-            📖 Livreiro
-          </Link>
+    <div className="min-h-screen bg-gradient-to-br from-amber-200 via-orange-100 to-rose-200">
+      {/* Navigation */}
+      <nav className="bg-white/90 backdrop-blur-md border-b border-secondary-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2 group">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center shadow-material">
+                <span className="text-white font-bold text-lg">📖</span>
+              </div>
+              <span className="font-display text-xl font-semibold text-gradient group-hover:scale-105 transition-transform">
+                Livreiro
+              </span>
+            </Link>
 
-          <div className="flex flex-wrap items-center gap-4 ml-auto text-sm">
-            {!token && (
-              <>
-                <Link to="/login" className="hover:underline">
-                  Login
-                </Link>
-                <Link to="/register" className="hover:underline">
-                  Registrar
-                </Link>
-              </>
-            )}
-            {token && (
-              <>
-                <Link to="/add" className="hover:underline">
-                  Adicionar
-                </Link>
-                <Link to="/my-books" className="hover:underline">
-                  Meus Livros
-                </Link>
-                <span className="text-gray-600">
-                  Logado como <strong>{name}</strong>
-                </span>
-                <button onClick={logout} className="text-red-600 hover:underline">
-                  Sair
-                </button>
-              </>
-            )}
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center space-x-8">
+              {!token ? (
+                <>
+                  <Link to="/login" className="text-secondary-600 hover:text-primary-600 font-medium transition-colors">
+                    Entrar
+                  </Link>
+                  <Link to="/register" className="btn-primary">
+                    Criar Conta
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/add" className="text-secondary-600 hover:text-primary-600 font-medium transition-colors">
+                    Adicionar Livro
+                  </Link>
+                  <Link
+                    to="/my-books"
+                    className="text-secondary-600 hover:text-primary-600 font-medium transition-colors"
+                  >
+                    Meus Livros
+                  </Link>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-secondary-500 text-sm">
+                      Olá, <span className="font-semibold text-secondary-700">{name}</span>
+                    </span>
+                    <button
+                      onClick={logout}
+                      className="text-secondary-500 hover:text-red-600 font-medium transition-colors"
+                    >
+                      Sair
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button className="text-secondary-600 hover:text-primary-600">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-4 py-6">
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Routes>
           <Route path="/" element={token ? <Home /> : <Welcome />} />
           <Route

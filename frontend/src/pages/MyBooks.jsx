@@ -6,13 +6,20 @@ import { Link } from "react-router-dom";
 export default function MyBooks() {
   const { token } = useAuth();
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     bookAPI
       .get("/books/mine", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setBooks(res.data));
+      .then((res) => {
+        setBooks(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, [token]);
 
   const handleDelete = async (id) => {
@@ -23,36 +30,123 @@ export default function MyBooks() {
     setBooks((prev) => prev.filter((b) => b._id !== id));
   };
 
-  return (
-    <div className="px-4">
-      <h2 className="text-2xl font-bold my-4">Meus Livros</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {books.map((book) => (
-          <div key={book._id} className="border rounded-xl p-4 shadow bg-white hover:shadow-lg transition-all">
-            {book.coverImage && (
-              <img src={book.coverImage} alt="Capa" className="w-full h-80 object-cover rounded mb-3" />
-            )}
-            <Link to={`/my-books/${book._id}`}>
-              <h3 className="text-lg font-bold mb-1">{book.title}</h3>
-            </Link>
-            <p className="text-sm text-gray-600 mb-1">{book.author}</p>
-            <p className="text-xs text-gray-500 italic">
-              {book.genre} | {book.publishedDate || "Data desconhecida"}
-            </p>
-            <p className="text-sm mt-2 text-gray-700 line-clamp-3">{book.description}</p>
-            <div className="flex justify-between items-center mt-4 text-sm">
-              <span>⭐ {book.rating ?? "—"}</span>
-              <span>📖 {book.progress ?? 0}%</span>
-            </div>
-            <button
-              onClick={() => handleDelete(book._id)}
-              className="mt-4 w-full bg-red-500 hover:bg-red-600 text-white py-1 rounded"
-            >
-              Remover
-            </button>
-          </div>
-        ))}
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-secondary-600">Carregando sua biblioteca...</p>
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 text-gradient">Minha Biblioteca</h1>
+        <p className="text-xl text-secondary-600">
+          {books.length === 0
+            ? "Sua biblioteca está vazia. Adicione seu primeiro livro!"
+            : `${books.length} livro${books.length !== 1 ? "s" : ""} em sua coleção`}
+        </p>
+      </div>
+
+      {/* Books Grid */}
+      {books.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {books.map((book) => (
+            <div key={book._id} className="card group transition-all duration-300 overflow-hidden">
+              {/* Book Cover */}
+              <div className="relative">
+                {book.coverImage ? (
+                  <img
+                    src={book.coverImage}
+                    alt={`Capa de ${book.title}`}
+                    className="w-full h-80 object-cover group-hover:brightness-110 transition-all duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-80 bg-gradient-to-br from-secondary-100 to-secondary-200 flex items-center justify-center">
+                    <span className="text-6xl text-secondary-400">📚</span>
+                  </div>
+                )}
+
+                {/* Progress Overlay */}
+                {book.progress && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-center">
+                    <div className="text-sm font-medium">{book.progress}% lido</div>
+                    <div className="w-full bg-white/20 rounded-full h-1 mt-1">
+                      <div
+                        className="bg-accent-500 h-1 rounded-full transition-all duration-300"
+                        style={{ width: `${book.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Book Info */}
+              <div className="p-6">
+                <Link to={`/my-books/${book._id}`} className="block group-hover:text-primary-600 transition-colors">
+                  <h3 className="text-xl font-display font-semibold mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                    {book.title}
+                  </h3>
+                </Link>
+
+                <p className="text-secondary-600 font-medium mb-1">{book.author}</p>
+
+                <div className="flex items-center justify-between text-sm text-secondary-500 mb-3">
+                  <span className="bg-secondary-100 px-2 py-1 rounded-full">{book.genre}</span>
+                  <span>{book.publishedDate || "Data desconhecida"}</span>
+                </div>
+
+                <p className="text-secondary-600 text-sm line-clamp-3 mb-4">{book.description}</p>
+
+                {/* Rating and Progress */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-yellow-500">⭐</span>
+                    <span className="font-medium text-secondary-700">{book.rating ? `${book.rating}/10` : "—"}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-accent-500">📖</span>
+                    <span className="font-medium text-secondary-700">{book.progress ? `${book.progress}%` : "0%"}</span>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex space-x-2">
+                  <Link to={`/my-books/${book._id}`} className="flex-1 btn-accent text-center text-sm py-2">
+                    Ver Detalhes
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(book._id)}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm"
+                    title="Remover livro"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        /* Empty State */
+        <div className="text-center py-16">
+          <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-4xl">📚</span>
+          </div>
+          <h3 className="text-2xl font-display font-semibold mb-4 text-secondary-800">Sua biblioteca está vazia</h3>
+          <p className="text-secondary-600 mb-8 max-w-md mx-auto">
+            Comece adicionando seu primeiro livro para construir sua coleção pessoal
+          </p>
+          <Link to="/add" className="btn-primary">
+            Adicionar Primeiro Livro
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
