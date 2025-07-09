@@ -8,7 +8,8 @@ router.get("/health", (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
-  const book = await Book.create({ ...req.body, ownerId: req.userId });
+  const { coverImage, ...rest } = req.body;
+  const book = await Book.create({ ...rest, coverImage, originalCoverImage: coverImage, ownerId: req.userId });
   res.status(201).json(book);
 });
 
@@ -44,6 +45,7 @@ router.patch("/:id", auth, async (req, res) => {
     if (startedAt !== undefined) book.startedAt = startedAt ? new Date(startedAt) : undefined;
     if (finishedAt !== undefined) book.finishedAt = finishedAt ? new Date(finishedAt) : undefined;
     if (coverImage !== undefined) book.coverImage = coverImage;
+    // Never update originalCoverImage here
 
     await book.save();
     res.json(book);

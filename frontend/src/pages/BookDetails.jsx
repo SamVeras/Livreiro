@@ -52,6 +52,7 @@ export default function BookDetails() {
     coverImage: "",
   });
   const [errors, setErrors] = useState({});
+  const [originalCoverImage, setOriginalCoverImage] = useState("");
 
   useEffect(() => {
     bookAPI
@@ -68,6 +69,7 @@ export default function BookDetails() {
           finishedAt: res.data.finishedAt ? res.data.finishedAt.slice(0, 10) : "",
           coverImage: res.data.coverImage || "",
         });
+        setOriginalCoverImage(res.data.originalCoverImage || res.data.coverImage || "");
         setLoading(false);
       })
       .catch(() => {
@@ -82,7 +84,7 @@ export default function BookDetails() {
   };
 
   const handleResetCover = () => {
-    setForm({ ...form, coverImage: "" });
+    setForm((prev) => ({ ...prev, coverImage: originalCoverImage }));
   };
 
   const validateAll = () => {

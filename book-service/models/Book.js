@@ -5,6 +5,7 @@ const BookSchema = new mongoose.Schema({
   genre: String,
   description: String,
   coverImage: String,
+  originalCoverImage: String,
   publishedDate: String,
   rating: { type: Number, min: 0, max: 10 },
   progress: { type: Number, min: 0, max: 100 },
