@@ -37,12 +37,13 @@ router.patch("/:id", auth, async (req, res) => {
       return res.status(403).json({ error: "Você não tem permissão para editar este livro." });
     }
 
-    const { rating, progress, review, startedAt, finishedAt } = req.body;
+    const { rating, progress, review, startedAt, finishedAt, coverImage } = req.body;
     if (rating !== undefined) book.rating = rating;
     if (progress !== undefined) book.progress = progress;
     if (review !== undefined) book.review = review;
     if (startedAt !== undefined) book.startedAt = startedAt ? new Date(startedAt) : undefined;
     if (finishedAt !== undefined) book.finishedAt = finishedAt ? new Date(finishedAt) : undefined;
+    if (coverImage !== undefined) book.coverImage = coverImage;
 
     await book.save();
     res.json(book);

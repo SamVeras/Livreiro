@@ -49,6 +49,7 @@ export default function BookDetails() {
     review: "",
     startedAt: "",
     finishedAt: "",
+    coverImage: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -65,6 +66,7 @@ export default function BookDetails() {
           review: res.data.review || "",
           startedAt: res.data.startedAt ? res.data.startedAt.slice(0, 10) : "",
           finishedAt: res.data.finishedAt ? res.data.finishedAt.slice(0, 10) : "",
+          coverImage: res.data.coverImage || "",
         });
         setLoading(false);
       })
@@ -77,6 +79,10 @@ export default function BookDetails() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: undefined, dateOrder: undefined });
+  };
+
+  const handleResetCover = () => {
+    setForm({ ...form, coverImage: "" });
   };
 
   const validateAll = () => {
@@ -96,7 +102,7 @@ export default function BookDetails() {
     const cleanedForm = { ...form };
     if (!cleanedForm.startedAt) delete cleanedForm.startedAt;
     if (!cleanedForm.finishedAt) delete cleanedForm.finishedAt;
-
+    if (!cleanedForm.coverImage) cleanedForm.coverImage = "";
     try {
       const res = await bookAPI.patch(`/books/${id}`, cleanedForm, {
         headers: { Authorization: `Bearer ${token}` },
@@ -311,6 +317,33 @@ export default function BookDetails() {
                   onChange={handleChange}
                   className="input-field"
                 />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-secondary-700 mb-2">URL da Capa do Livro</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="url"
+                    name="coverImage"
+                    value={form.coverImage}
+                    onChange={handleChange}
+                    className="input-field flex-1"
+                    placeholder="Cole o link da imagem da capa"
+                    autoComplete="off"
+                  />
+                  <button type="button" onClick={handleResetCover} className="btn-secondary px-3 py-2 text-xs">
+                    Restaurar padrão
+                  </button>
+                </div>
+                {form.coverImage && (
+                  <div className="mt-2">
+                    <img
+                      src={form.coverImage}
+                      alt="Pré-visualização da capa"
+                      className="h-32 rounded shadow border border-secondary-200 mx-auto"
+                      onError={(e) => (e.target.style.display = "none")}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             {errors.dateOrder && <p className="text-red-500 text-xs mt-1 text-center">{errors.dateOrder}</p>}

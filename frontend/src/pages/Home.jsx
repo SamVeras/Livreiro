@@ -44,7 +44,7 @@ export default function Home() {
               <div className="flex gap-6 overflow-x-auto pb-4 pt-4 px-2 bookcase-scrollbar">
                 {books.map((book) => (
                   <Link key={book._id} to={`/my-books/${book._id}`} className="flex-shrink-0 w-32 md:w-40 group">
-                    <div className="rounded-lg shadow-material-lg bg-white/80 h-48 md:h-60 flex items-center justify-center overflow-hidden transition-shadow border-b-8 border-amber-400">
+                    <div className="rounded-lg shadow-material-lg bg-white/80 h-48 md:h-60 flex items-center justify-center overflow-hidden transition-shadow border-b-8 border-amber-400 relative">
                       {book.coverImage ? (
                         <img
                           src={book.coverImage}
@@ -56,6 +56,14 @@ export default function Home() {
                           <span className="text-5xl text-secondary-400">📚</span>
                         </div>
                       )}
+                      {book.progress ? (
+                        <div className="absolute left-0 bottom-0 w-full">
+                          <div
+                            className="h-1 bg-gradient-to-r from-primary-500 to-accent-500"
+                            style={{ width: `${book.progress}%` }}
+                          ></div>
+                        </div>
+                      ) : null}
                     </div>
                     <div className="mt-2 text-sm font-medium text-secondary-800 line-clamp-2 text-center">
                       {book.title}
