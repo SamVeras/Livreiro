@@ -17,50 +17,14 @@
 
 ## Tecnologias Utilizadas
 
-### Backend
+- **Frontend**: React, Vite, Tailwind CSS, React Router
+- **Backend**: Node.js, Express.js, MongoDB, Mongoose
+- **Autenticação**: JSON Web Tokens
+- **APIs Externas**: Google Books API
+- **Deploy (local ou nuvem)**: Docker, Railway
+- **Microsserviços**: `auth-service` (autenticação de usuário) e `book-service` (gerenciamento de livros)
 
-- Node.js + Express.js
-- MongoDB + Mongoose
-- JWT para autenticação
-- Microsserviços:
-  - `auth-service`: autenticação
-  - `book-service`: gerenciamento de livros
-
-### Frontend
-
-- React (com Vite)
-- React Router DOM
-- Tailwind CSS
-
-### Integrações
-
-- API do Google Books
-- Railway (deploy em nuvem)
-- Docker + Docker Compose
-
-## Estrutura do Projeto
-
-```
-Livreiro/
-├── auth-service/
-│   ├── routes/auth.js
-│   ├── models/User.js
-│   ├── server.js
-│   └── ...
-├── book-service/
-│   ├── routes/books.js
-│   ├── models/Book.js
-│   ├── server.js
-│   └── ...
-├── frontend/
-│   ├── src/pages/
-│   ├── src/components/
-│   ├── src/context/
-│   └── ...
-└── docker-compose.yml
-```
-
-## Como Rodar Localmente (com Docker)
+## Como Rodar Localmente (com Docker Compose)
 
 ### Pré-requisitos
 
@@ -75,45 +39,99 @@ cd Livreiro
 docker compose up --build
 ```
 
-Acesse o sistema em: [http://localhost:4173](http://localhost:4173)
+Acesse em: [http://localhost:4173](http://localhost:4173)
 
 ---
 
 ## Variáveis de Ambiente
 
-As variáveis já estão definidas no `docker-compose.yml` e nos arquivos `.env` de cada serviço. Se quiser configurar manualmente:
+#### auth-service:
 
-### auth-service/.env
-
-```env
-PORT=3001
-MONGO_URI=mongodb://mongo:27017/auth
-JWT_SECRET=sua_chave_jwt
-```
-
-### book-service/.env
-
-```env
-PORT=3002
-MONGO_URI=mongodb://mongo:27017/books
-JWT_SECRET=sua_chave_jwt
-```
-
-### frontend/.env
-
-```env
-VITE_API_AUTH=http://localhost:3001/api/auth
-VITE_API_BOOK=http://localhost:3002/api
-```
+| Variável     | Exemplo/valor padrão         |
+| ------------ | ---------------------------- |
+| `PORT`       | `3001`                       |
+| `MONGO_URI`  | `mongodb://mongo:27017/auth` |
+| `JWT_SECRET` | `chave_secreta`              |
 
 ---
 
-## ☁️ Deploy em Produção
+#### book-service:
 
-O projeto está hospedado na Railway:
+| Variável     | Exemplo/valor padrão     |
+| ------------ | ------------------------ |
+| `PORT`       | `3002`                   |
+| `MONGO_URI`  | `mongodb://mongo:27017/` |
+| `JWT_SECRET` | `chave_secreta`          |
 
-- Railway detecta automaticamente o `docker-compose.yml`
-- MongoDB roda como container com volume persistente
-- As variáveis de ambiente podem ser configuradas pelo painel do Railway
-- O sistema pode ser acessado publicamente em:  
-  [https://livreiro.up.railway.app](https://livreiro.up.railway.app)
+---
+
+#### frontend:
+
+| Variável        | Exemplo/valor padrão             |
+| --------------- | -------------------------------- |
+| `VITE_API_AUTH` | `http://localhost:3001/api/auth` |
+| `VITE_API_BOOK` | `http://localhost:3002/api`      |
+
+## Deploy em Produção (Railway)
+
+Este projeto foi deployado em produção manualmente no Railway, com os serviços configurados individualmente.
+
+**Site online**: [livreiro.up.railway.app](https://livreiro.up.railway.app)
+
+### Como o deploy foi feito:
+
+- Os serviços (`auth-service`, `book-service`, `frontend`) foram adicionados **separadamente** em um projeto Railway.
+- O **root** de cada serviço foi ajustado para apontar para a pasta correta no repositório.
+- O **banco de dados MongoDB** foi criado diretamente no Railway.
+- As **variáveis de ambiente** foram configuradas no painel de cada serviço.
+- Os serviços `auth-service` e `book-service` foram configurados para expor _endpoints_ **públicos**, acessados pelo frontend.
+- Também foi necessário mudar os comandos de `build` e `start` (mais detalhes podem ser vistos no template).
+
+Caso queira, pode utilizar o [template de deploy no Railway](https://railway.com/deploy/ZdwvCQ?referralCode=BNYRM2), que replica essa configuração.
+
+## Arquitetura
+
+```mermaid
+graph TB
+    subgraph "***Frontend***"
+        UI[**Interface de usuário**<br/>*Porta: 4173*<br/>*Tailwind CSS*]
+    end
+
+    subgraph "***Serviços backend***"
+        AUTH[**Auth Service**<br/>*Porta: 3001*<br/>*Autenticação JWT*<br/>*Gerenciamento de usuários*]
+        BOOK[**Book Service**<br/>*Porta: 3002*<br/>*Operações CRUD de livros*<br/>*Progresso, notas e reviews*]
+    end
+
+    subgraph "***Banco de dados***"
+        MONGO[(**MongoDB**<br/>*Porta: 27017*<br/>*Usuários e livros*)]
+    end
+
+    subgraph "***Serviços externos***"
+        GOOGLE[**API do Google Books**<br/>*Busca de livros e metadados*]
+    end
+
+    subgraph "***Infraestrutura***"
+        DOCKER[**Docker Compose**<br/>*Desenvolvimento local*]
+        RAILWAY[**Railway**<br/>*Deploy em nuvem*]
+    end
+
+    %% Interações de usuário
+    UI -->|Login e registro| AUTH
+    UI -->|Adicionar, editar ou deletar livros| BOOK
+    UI -->|Procurar livros| GOOGLE
+
+    %% Serviço para base de dados
+    AUTH -->|Dados de usuário| MONGO
+    BOOK -->|Dados de livros| MONGO
+
+    %% Infraestrutura
+    DOCKER --> AUTH
+    DOCKER --> BOOK
+    DOCKER --> UI
+    DOCKER --> MONGO
+
+    RAILWAY --> AUTH
+    RAILWAY --> BOOK
+    RAILWAY --> UI
+    RAILWAY --> MONGO
+```
